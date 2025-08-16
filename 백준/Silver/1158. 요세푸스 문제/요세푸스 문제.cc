@@ -1,8 +1,20 @@
 #include <iostream>
-#include <list>
-#include <vector>
 
 using namespace std;
+
+constexpr int max_idx = 5005;
+
+struct Node
+{
+	int data;
+	int prev;
+	int next;
+};
+
+Node nodes[max_idx];
+
+int answer[max_idx];
+int answer_idx = 0;
 
 int main()
 {
@@ -13,33 +25,32 @@ int main()
 	int k;
 	cin >> n >> k;
 
-	list<int> circle;
 	for (int i = 1; i <= n; ++i)
 	{
-		circle.push_back(i);
+		nodes[i].data = i;
+		nodes[i].prev = i - 1;
+		nodes[i - 1].next = i;
 	}
-	auto it = circle.begin();
+	nodes[1].prev = n;
+	nodes[n].next = 1;
 
-	vector<int> answer(n);
-	int answer_idx = 0;
-
-	while (answer_idx < n)
+	int left = n;
+	int rep;
+	int node_idx = 1;
+	while (left)
 	{
-		int rep = k;
-		while (--rep)
+		rep = (k - 1) % left;
+		while (rep--)
 		{
-			++it;
-			if (it == circle.end())
-			{
-				it = circle.begin();
-			}
+			node_idx = nodes[node_idx].next;
 		}
-		answer[answer_idx++] = *it;
-		it = circle.erase(it);
-		if (it == circle.end())
-		{
-			it = circle.begin();
-		}
+
+		answer[answer_idx++] = nodes[node_idx].data;
+		left--;
+
+		nodes[nodes[node_idx].prev].next = nodes[node_idx].next;
+		nodes[nodes[node_idx].next].prev = nodes[node_idx].prev;
+		node_idx = nodes[node_idx].next;
 	}
 
 	cout << "<";
