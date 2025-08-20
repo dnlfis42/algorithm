@@ -12,15 +12,14 @@ int main()
 
 	int n;
 	cin >> n;
-	for (int i = 0; i < n; ++i)
-	{
-		cin >> seq[i];
-	}
-
+	cin >> seq[0];
 	res[0] = seq[0];
+
+	int ans = res[0];
 	for (int i = 1; i < n; ++i)
 	{
-		for (int j = 0; j < n - 1; ++j)
+		cin >> seq[i];
+		for (int j = 0; j < i; ++j)
 		{
 			if (seq[j] < seq[i] && res[j] > res[i])
 			{
@@ -28,12 +27,8 @@ int main()
 			}
 		}
 		res[i] += seq[i];
-	}
 
-	int ans = 0;
-	for (int i = 0; i < n; ++i)
-	{
-		if (res[i] > ans)
+		if (ans < res[i])
 		{
 			ans = res[i];
 		}
