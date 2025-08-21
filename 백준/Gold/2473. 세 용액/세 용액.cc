@@ -3,43 +3,75 @@
 
 using namespace std;
 
-int n;
-
-long long solutions[5001];
+long long sol[5001];
 long long ans[3] = { 1'111'111'111,1'111'111'111 ,1'111'111'111 };
+long long comp;
+long long ans_abs;
+
+static int bs(int st, int en)
+{
+	if (st == en)
+	{
+		return st;
+	}
+
+	int mid = (st + en) / 2;
+	if (sol[mid] < comp)
+	{
+		return bs(mid + 1, en);
+	}
+	else if (sol[mid] == comp)
+	{
+		return mid;
+	}
+	else
+	{
+		return bs(st, mid);
+	}
+}
 
 int main()
 {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
 
+	int n;
 	cin >> n;
 	for (int i = 0; i < n; ++i)
 	{
-		cin >> solutions[i];
+		cin >> sol[i];
 	}
-	sort(solutions, solutions + n);
+	sort(sol, sol + n);
 
-	for (int i = 0; i < n; ++i)
+	ans_abs = abs(ans[0] + ans[1] + ans[2]);
+	long long temp_abs;
+	for (int first = 0; first < n - 2; ++first)
 	{
-		for (int j = i + 1; j < n; ++j)
+		for (int second = first + 1; second < n - 1; ++second)
 		{
-			int idx = static_cast<int>(lower_bound(solutions, solutions + n, -solutions[i] - solutions[j]) - solutions);
-			for (int k = -3; k <= 2; ++k)
+			comp = -sol[first] - sol[second];
+			int third = bs(second + 1, n);
+			if (third >= second + 2)
 			{
-				if (idx + k < 0 || idx + k >= n)
+				temp_abs = abs(sol[third - 1] - comp);
+				if (ans_abs > temp_abs)
 				{
-					continue;
+					ans[0] = sol[first];
+					ans[1] = sol[second];
+					ans[2] = sol[third - 1];
+					ans_abs = temp_abs;
 				}
-				if (idx + k == i || idx + k == j)
+			}
+
+			if (third < n)
+			{
+				temp_abs = abs(sol[third] - comp);
+				if (ans_abs > temp_abs)
 				{
-					continue;
-				}
-				if (abs(ans[0] + ans[1] + ans[2]) > abs(solutions[i] + solutions[j] + solutions[idx + k]))
-				{
-					ans[0] = solutions[i];
-					ans[1] = solutions[j];
-					ans[2] = solutions[idx + k];
+					ans[0] = sol[first];
+					ans[1] = sol[second];
+					ans[2] = sol[third];
+					ans_abs = temp_abs;
 				}
 			}
 		}
