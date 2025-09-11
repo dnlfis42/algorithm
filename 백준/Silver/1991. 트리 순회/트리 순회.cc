@@ -5,7 +5,6 @@ using namespace std;
 struct Node
 {
 	char c;
-	Node* parent;
 	Node* left;
 	Node* right;
 };
@@ -77,7 +76,6 @@ int main()
 		{
 			left = &nodes[c2 - 'A'];
 			node->left = left;
-			left->parent = node;
 		}
 		else
 		{
@@ -88,7 +86,6 @@ int main()
 		{
 			right = &nodes[c3 - 'A'];
 			node->right = right;
-			right->parent = node;
 		}
 		else
 		{
