@@ -2,58 +2,50 @@
 
 using namespace std;
 
-vector<bool> v;
-vector<bool> d;
-vector<bool> ad;
-int cnt;
+vector<bool> vert;
+vector<bool> diag;
+vector<bool> anti_diag;
 
-void f1(int n, int row)
+int solve(int r, int n)
 {
-	if (row == n)
+	if (r == n)
 	{
-		++cnt;
-		return;
+		return 1;
 	}
 
+	int cnt = 0;
 	for (int i = 0; i < n; ++i)
 	{
-		int di = n - 1 - row + i;
-		int adi = row + i;
-		if (v[i] || d[di] || ad[adi])
+		int di = n - 1 - r + i;
+		int adi = r + i;
+		if (vert[i] || diag[di] || anti_diag[adi])
 		{
 			continue;
 		}
 
-		v[i] = true;
-		d[di] = true;
-		ad[adi] = true;
-		f1(n,row + 1);
-		v[i] = false;
-		d[di] = false;
-		ad[adi] = false;
+		vert[i] = diag[di] = anti_diag[adi] = true;
+		cnt += solve(r + 1, n);
+		vert[i] = diag[di] = anti_diag[adi] = false;
 	}
+	return cnt;
 }
 
-// 메모리	KB
-// 시간		ms
-int solution1()
+int solution2()
 {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
 
 	int n;
 	cin >> n;
-	v.resize(n, false);
-	d.resize(n * 2 - 1, false);
-	ad.resize(n * 2 - 1, false);
-
-	f1(n, 0);
-	cout << cnt;
+	vert.resize(n, false);
+	diag.resize(n * 2 - 1, false);
+	anti_diag.resize(n * 2 - 1, false);
+	cout << solve(0, n);
 
 	return 0;
 }
 
 int main()
 {
-	return solution1();
+	return solution2();
 }
