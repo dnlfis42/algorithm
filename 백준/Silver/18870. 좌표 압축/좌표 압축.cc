@@ -1,6 +1,4 @@
-#include <iostream>
-#include <map>
-#include <vector>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -13,23 +11,18 @@ int main()
 	cin >> n;
 
 	vector<int> seq(n);
-	map<int, int> mp;
-
 	for (int i = 0; i < n; ++i)
 	{
 		cin >> seq[i];
-		mp[seq[i]];
 	}
 
-	int pos = 0;
-	for (auto& it : mp)
-	{
-		it.second = pos++;
-	}
+	vector<int> comp = seq;
+	sort(comp.begin(), comp.end());
+	comp.erase(unique(comp.begin(), comp.end()), comp.end());
 
-	for (int i = 0; i < n; ++i)
+	for (int x : seq)
 	{
-		cout << mp.at(seq[i]) << " ";
+		cout << lower_bound(comp.begin(), comp.end(), x) - comp.begin() << " ";
 	}
 
 	return 0;
