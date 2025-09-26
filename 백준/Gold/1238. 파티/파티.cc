@@ -7,8 +7,6 @@ int solution()
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
 
-	const int INF = 0xfffffff;
-
 	int n; // 학생의 수
 	int m; // 도로의 개수
 	int x; // 파티 장소
@@ -24,65 +22,40 @@ int solution()
 		reverse[en].push_back({ t,st });
 	}
 
-	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
-
-	vector<int> from_x(n + 1, INF);
-	from_x[x] = 0;
-	pq.push({ from_x[x],x });
-	while (!pq.empty())
-	{
-		auto p = pq.top();
-		pq.pop();
-
-		int val = p.first;
-		int cur = p.second;
-
-		if (from_x[cur] != val)
+	auto dijkstra = [&](int start, const vector < vector<pair<int, int>>>& graph)
 		{
-			continue;
-		}
+			const int INF = 1e9;
+			vector<int> dist(n + 1, INF);
+			priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
 
-		for (auto edge : edges[cur])
-		{
-			int t = edge.first;
-			int nxt = edge.second;
+			dist[start] = 0;
+			pq.push({ dist[start],start });
 
-			if (from_x[nxt] > val + t)
+			while (!pq.empty())
 			{
-				from_x[nxt] = val + t;
-				pq.push({ from_x[nxt],nxt });
+				auto [val, cur] = pq.top();
+				pq.pop();
+
+				if (dist[cur] != val)
+				{
+					continue;
+				}
+
+				for (auto [t, nxt] : graph[cur])
+				{
+					if (dist[nxt] > val + t)
+					{
+						dist[nxt] = val + t;
+						pq.push({ dist[nxt],nxt });
+					}
+				}
 			}
-		}
-	}
 
-	vector<int> to_x(n + 1, INF);
-	to_x[x] = 0;
-	pq.push({ to_x[x],x });
-	while (!pq.empty())
-	{
-		auto p = pq.top();
-		pq.pop();
+			return dist;
+		};
 
-		int val = p.first;
-		int cur = p.second;
-
-		if (to_x[cur] != val)
-		{
-			continue;
-		}
-
-		for (auto edge : reverse[cur])
-		{
-			int t = edge.first;
-			int nxt = edge.second;
-
-			if (to_x[nxt] > val + t)
-			{
-				to_x[nxt] = val + t;
-				pq.push({ to_x[nxt],nxt });
-			}
-		}
-	}
+	auto from_x = dijkstra(x, edges);
+	auto to_x = dijkstra(x, reverse);
 
 	int mx = 0;
 	for (int i = 1; i <= n; ++i)
