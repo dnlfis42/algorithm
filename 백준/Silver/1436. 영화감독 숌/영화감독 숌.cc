@@ -10,16 +10,24 @@ int solution()
 	int n;
 	cin >> n;
 
-	int idx = 0;
 	int x = 666;
-	for (;; ++x)
+	for (int i = 0;; ++x)
 	{
-		if (to_string(x).find("666") != string::npos)
+		bool found = false;
+		int t = x;
+		while (t > 512)
 		{
-			if (++idx == n)
+			if (t % 1000 == 666)
 			{
+				found = true;
 				break;
 			}
+			t /= 10;
+		}
+
+		if (found && ++i == n)
+		{
+			break;
 		}
 	}
 	cout << x;
