@@ -10,30 +10,20 @@ int solution()
 	int l, r, a;
 	cin >> l >> r >> a;
 
-	int diff = 0;
-	int move = 0;
-	int ans = 0;
+	int diff = abs(l - r);
+	int move = min(diff, a);
+
 	if (l < r)
 	{
-		diff = r - l;
-		int move = min(diff, a);
 		l += move;
-		a -= move;
-		ans = l * 2 + (a >> 1 << 1);
-	}
-	else if (l > r)
-	{
-		diff = l - r;
-		int move = min(diff, a);
-		r += move;
-		a -= move;
-		ans = r * 2 + (a >> 1 << 1);
 	}
 	else
 	{
-		ans = l * 2 + (a >> 1 << 1);
+		r += move;
 	}
-	cout << ans;
+	a -= move;
+
+	cout << min(l, r) * 2 + (a / 2) * 2;
 
 	return 0;
 }
