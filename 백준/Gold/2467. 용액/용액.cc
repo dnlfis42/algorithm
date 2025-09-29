@@ -15,42 +15,32 @@ int solution()
 	{
 		cin >> v[i];
 	}
-	sort(v.begin(), v.end());
 
-	int mn = INT_MAX;
-	int s1 = 0, s2 = 0;
-	for (int li = 0, ri = n - 1;;)
+	int li = 0;
+	int ri = n - 1;
+	int s1 = v[li], s2 = v[ri];
+	int mn = abs(s1 + s2);
+
+	while (li < ri)
 	{
-		if (li == ri)
+		int res = v[li] + v[ri];
+		if (abs(res) < mn)
 		{
-			break;
+			mn = abs(res);
+			s1 = v[li];
+			s2 = v[ri];
 		}
 
-		int res = v[li] + v[ri];
 		if (res < 0)
 		{
-			if (mn > res * -1)
-			{
-				mn = res * -1;
-				s1 = v[li];
-				s2 = v[ri];
-			}
 			++li;
 		}
 		else if (res > 0)
 		{
-			if (mn > res)
-			{
-				mn = res;
-				s1 = v[li];
-				s2 = v[ri];
-			}
 			--ri;
 		}
 		else
 		{
-			s1 = v[li];
-			s2 = v[ri];
 			break;
 		}
 	}
