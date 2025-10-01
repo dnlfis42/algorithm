@@ -9,7 +9,7 @@ int solution()
 
 	int n;
 	cin >> n;
-	set<string> words;
+	unordered_set<string> words;
 	while (n--)
 	{
 		string s;
