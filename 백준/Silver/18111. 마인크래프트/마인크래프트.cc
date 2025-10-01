@@ -2,6 +2,8 @@
 
 using namespace std;
 
+int height[257];
+
 int solution()
 {
 	ios::sync_with_stdio(false);
@@ -13,29 +15,60 @@ int solution()
 	cin >> n >> m >> b;
 
 	int size = n * m;
-	vector<int> field(size);
+
 	for (int i = 0; i < size; ++i)
 	{
-		cin >> field[i];
+		int x;
+		cin >> x;
+		++height[x];
+	}
+
+	int mn_height = 256;
+	for (int i = 0; i <= 256; ++i)
+	{
+		if (height[i])
+		{
+			mn_height = i;
+			break;
+		}
+	}
+
+	int mx_height = 0;
+	for (int i = 256; i >= 0; --i)
+	{
+		if (height[i])
+		{
+			mx_height = i;
+			break;
+		}
 	}
 
 	int best_time = INT_MAX;
 	int best_height = 0;
-	for (int h = 0; h <= 256; ++h)
+	for (int h = mn_height; h <= mx_height; ++h)
 	{
-		long long time = 0;
-		long long inv = b;
-		for (int v : field)
+		int time = 0;
+		int inv = b;
+
+		for (int i = mn_height; i <= mx_height; ++i)
 		{
-			if (v > h)
+			if (height[i])
 			{
-				time += static_cast<long long>(v - h) * 2;
-				inv += static_cast<long long>(v - h);
+				if (h < i) // 파기
+				{
+					time += (i - h) * 2 * height[i];
+					inv += (i - h) * height[i];
+				}
+				else if (h > i) // 놓기
+				{
+					time += (h - i) * height[i];
+					inv -= (h - i) * height[i];
+				}
 			}
-			else
+
+			if (time > best_time)
 			{
-				time += static_cast<long long>(h - v);
-				inv -= static_cast<long long>(h - v);
+				break;
 			}
 		}
 
@@ -50,7 +83,6 @@ int solution()
 			best_height = h;
 		}
 	}
-
 	cout << best_time << ' ' << best_height;
 
 	return 0;
