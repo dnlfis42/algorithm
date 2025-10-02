@@ -10,9 +10,6 @@ int solution()
 	long long a, b;
 	cin >> a >> b;
 
-	unordered_set<long long> visited;
-	visited.insert(a);
-
 	queue<pair<long long, long long>> q;
 	q.push({ a,1 });
 
@@ -29,14 +26,12 @@ int solution()
 		}
 		else
 		{
-			if (cur * 2 <= b && visited.find(cur * 2) == visited.end())
+			if (cur * 2 <= b)
 			{
-				visited.insert(cur * 2);
 				q.push({ cur * 2,cnt + 1 });
 			}
-			if (cur * 10 + 1 <= b && visited.find(cur * 10 + 1) == visited.end())
+			if (cur * 10 + 1 <= b)
 			{
-				visited.insert(cur * 10 + 1);
 				q.push({ cur * 10 + 1,cnt + 1 });
 			}
 		}
