@@ -3,48 +3,47 @@
 using namespace std;
 
 int n; // 도시의 크기
-int m; // 남겨야 할 치킨집
+int m; // 남겨야 할 치킨집의 개수
 
 vector<pair<int, int>> house;
 vector<pair<int, int>> chicken;
-vector<bool> checked;
+vector<pair<int, int>> valid;
 
 int ans = 1e9;
 
+int calc()
+{
+	int sum = 0;
+	for (auto [hr, hc] : house)
+	{
+		int mn = 100;
+		for (auto [cr, cc] : valid)
+		{
+			mn = min(mn, abs(hr - cr) + abs(hc - cc));
+		}
+		sum += mn;
+	}
+
+	return sum;
+}
+
 void combination(int idx, int cnt)
 {
-	if (cnt == m)
+	if (chicken.size() - idx + cnt < m)
 	{
-		int sum = 0;
-
-		for (auto& p : house)
-		{
-			int mn = 100;
-			for (int i = 0; i < chicken.size(); ++i)
-			{
-				if (checked[i])
-				{
-					mn = min(mn, abs(p.first - chicken[i].first) + abs(p.second - chicken[i].second));
-				}
-			}
-			sum += mn;
-		}
-		ans = min(ans, sum);
-
 		return;
 	}
 
-	for (int i = idx; i < chicken.size(); ++i)
+	if (cnt == m)
 	{
-		if (checked[i])
-		{
-			continue;
-		}
-
-		checked[i] = true;
-		combination(i + 1, cnt + 1);
-		checked[i] = false;
+		ans = min(ans, calc());
+		return;
 	}
+
+	valid.push_back(chicken[idx]);
+	combination(idx + 1, cnt + 1);
+	valid.pop_back();
+	combination(idx + 1, cnt);
 }
 
 int solution()
@@ -71,10 +70,7 @@ int solution()
 		}
 	}
 
-	checked.assign(chicken.size(), false);
-
 	combination(0, 0);
-
 	cout << ans;
 
 	return 0;
