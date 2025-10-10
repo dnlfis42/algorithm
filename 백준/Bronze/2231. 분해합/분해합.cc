@@ -10,19 +10,27 @@ int solution()
 	int n;
 	cin >> n;
 
+	int d = 0;
+	int t = n;
+	while (t)
+	{
+		t /= 10;
+		++d;
+	}
+
 	int ans = 0;
-	for (int i = n / 2; i <= n; ++i)
+	int i = max(n / 2, n - 9 * d);
+	for (; i < n; ++i)
 	{
 		int cur = i;
-		int t = i;
-
+		t = i;
 		while (t)
 		{
 			cur += t % 10;
 			t /= 10;
 		}
 
-		if (n == cur)
+		if (cur == n)
 		{
 			ans = i;
 			break;
