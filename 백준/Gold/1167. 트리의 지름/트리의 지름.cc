@@ -7,83 +7,72 @@ int solution()
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
 
-	const int INF = 1e9;
-
 	int v;
 	cin >> v;
+
 	vector<vector<pair<int, int>>> edges(v + 1);
 
 	for (int i = 0; i < v; ++i)
 	{
-		int n1, n2;
-		int d;
-		cin >> n1;
+		int st;
+		cin >> st;
 		for (;;)
 		{
-			cin >> n2;
-			if (n2 == -1)
+			int en;
+			cin >> en;
+
+			if (en == -1)
 			{
 				break;
 			}
+
+			int d;
 			cin >> d;
-			edges[n1].push_back({ d,n2 });
+
+			edges[st].push_back({ en,d });
 		}
 	}
 
-	auto dijkstra = [&](int st)
+	auto farthest = [&](int st)
 		{
-			vector<int> dist(v + 1, INF);
+			int vortex = st;
+			int dist = 0;
 
-			priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
-			dist[st] = 0;
-			pq.push({ dist[st],st });
+			vector<bool> visit(v + 1, false);
+			visit[st] = true;
 
-			while (!pq.empty())
+			queue<pair<int, int>> q;
+			q.push({ st,0 });
+
+			while (!q.empty())
 			{
-				auto p = pq.top();
-				pq.pop();
+				auto cur = q.front();
+				q.pop();
 
-				if (p.first != dist[p.second])
+				if (dist < cur.second)
 				{
-					continue;
+					vortex = cur.first;
+					dist = cur.second;
 				}
 
-				for (auto& en : edges[p.second])
+				for (const auto& nxt : edges[cur.first])
 				{
-					if (dist[en.second] > p.first + en.first)
+					if (visit[nxt.first])
 					{
-						dist[en.second] = p.first + en.first;
-						pq.push({ dist[en.second],en.second });
+						continue;
 					}
+
+					visit[nxt.first] = true;
+					q.push({ nxt.first,cur.second + nxt.second });
 				}
 			}
 
-			return dist;
+			return make_pair(vortex, dist);
 		};
 
-	auto from_1 = dijkstra(1);
-
-	int idx = 0;
-	int mx = 0;
-	for (int i = 1; i <= v; ++i)
-	{
-		if (mx < from_1[i])
-		{
-			idx = i;
-			mx = from_1[i];
-		}
-	}
-
-	auto from_x = dijkstra(idx);
-	mx = 0;
-	for (int i = 1; i <= v; ++i)
-	{
-		if (mx < from_x[i])
-		{
-			mx = from_x[i];
-		}
-	}
-	cout << mx;
+	auto st = farthest(1);
+	auto en = farthest(st.first);
+	cout << en.second;
 
 	return 0;
 }
