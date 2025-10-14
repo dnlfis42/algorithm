@@ -1,46 +1,42 @@
-#include <iostream>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-int n;
-int m;
+int n, m;
 
 int order[8];
-bool check[8];
 
-static void recur(int level, int before)
+void recur(int num, int cnt)
 {
-	if (level == m)
+	if (cnt == m)
 	{
-		for (int i = 0; i < m; ++i)
+		for (int i = 0; i < cnt; ++i)
 		{
-			cout << order[i] << ' ';
+			cout << order[i] << " ";
 		}
-		cout << '\n';
-
+		cout << "\n";
 		return;
 	}
 
-	for (int i = before; i < n; ++i)
+	for (int i = num; i <= n - m + cnt + 1; ++i)
 	{
-		if (!check[i])
-		{
-			check[i] = true;
-			order[level] = i + 1;
-			recur(level + 1, i + 1);
-			check[i] = false;
-		}
+		order[cnt] = i;
+		recur(i + 1, cnt + 1);
 	}
 }
 
-int main()
+int solution()
 {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
 
 	cin >> n >> m;
-
-	recur(0, 0);
+	recur(1, 0);
 
 	return 0;
+}
+
+int main()
+{
+	return solution();
 }
