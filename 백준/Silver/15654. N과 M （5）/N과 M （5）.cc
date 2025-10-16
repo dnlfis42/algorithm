@@ -1,56 +1,64 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-int n;
-int m;
+int n, m;
 
 vector<int> v;
-int order[8];
-bool check[8];
+vector<bool> selected;
+vector<int> sequence;
 
-static void recur(int level)
+void recur(int cnt)
 {
-	if (level == m)
+	if (cnt == m)
 	{
-		for (int i = 0; i < m; ++i)
+		for (int x : sequence)
 		{
-			cout << order[i] << ' ';
+			cout << x << " ";
 		}
-		cout << '\n';
-
+		cout << "\n";
 		return;
 	}
 
 	for (int i = 0; i < n; ++i)
 	{
-		if (!check[i])
+		if (selected[i])
 		{
-			check[i] = true;
-			order[level] = v[i];
-			recur(level + 1);
-			check[i] = false;
+			continue;
 		}
+
+		selected[i] = true;
+		sequence[cnt] = v[i];
+		recur(cnt + 1);
+		selected[i] = false;
 	}
 }
 
-int main()
+int solution()
 {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
 
 	cin >> n >> m;
 
-	v.resize(n);
+	v.reserve(n);
+	selected.assign(n, false);
+	sequence.resize(m);
+
 	for (int i = 0; i < n; ++i)
 	{
-		cin >> v[i];
+		int x;
+		cin >> x;
+		v.push_back(x);
 	}
 	sort(v.begin(), v.end());
 
 	recur(0);
 
 	return 0;
+}
+
+int main()
+{
+	return solution();
 }
